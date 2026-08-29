@@ -147,22 +147,8 @@ export function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* CTA + mobile toggle */}
+          {/* Mobile toggle */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button
-              onClick={() => scrollTo("final")}
-              className="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-full transition-all duration-300 hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #6d28d9, #8b5cf6, #a78bfa)",
-                backgroundSize: "200% 200%",
-                color: "#fff",
-                boxShadow: "0 0 20px rgba(139, 92, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.2)",
-                border: "1px solid rgba(196, 181, 253, 0.35)",
-              }}
-            >
-              Explore
-              <span style={{ fontSize: "0.8rem" }}>→</span>
-            </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden p-2 text-white"
