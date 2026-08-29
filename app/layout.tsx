@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ParticleBackground } from "@/components/ParticleBackground";
@@ -19,6 +19,12 @@ export const metadata: Metadata = {
   title: "Syncup — One life. One rhythm. One sync.",
   description:
     "A next-generation communication and social platform built around the real rhythm of people's lives.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
