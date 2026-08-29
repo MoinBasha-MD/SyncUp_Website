@@ -18,7 +18,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Syncup — One life. One rhythm. One sync.",
   description:
-    "A next-generation communication and social platform built around the real rhythm of people's lives.",
+    "Syncup helps people share their rhythm, discover when their moments align, and connect at the right time. Stop asking 'Are you free?' — let the moment find you.",
+  openGraph: {
+    title: "Syncup — One life. One rhythm. One sync.",
+    description: "Share your rhythm. Discover when moments align. Connect at the right time.",
+    type: "website",
+    siteName: "Syncup",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Syncup — One life. One rhythm. One sync.",
+    description: "Share your rhythm. Discover when moments align. Connect at the right time.",
+  },
 };
 
 export const viewport: Viewport = {

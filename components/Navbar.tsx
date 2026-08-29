@@ -85,6 +85,7 @@ export function Navbar() {
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-2.5 transition-transform duration-300 hover:scale-105 flex-shrink-0"
+            aria-label="Syncup — back to top"
           >
             <div className="h-3 w-3 rounded-full pulse-glow" style={{ background: "var(--purple-bright)", boxShadow: "0 0 18px rgba(167,139,250,1)" }} />
             <span className="text-lg font-bold tracking-tight text-white">Syncup</span>

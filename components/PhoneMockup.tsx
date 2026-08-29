@@ -132,6 +132,351 @@ export function HomeScreen() {
   );
 }
 
+// ===== Hero Screen — product demo showing people + status + availability =====
+export function HeroScreen() {
+  const people = [
+    { name: "Alex Chen", initials: "AC", status: "Free", badge: "available", detail: "Coffee & conversation" },
+    { name: "Sam Rivera", initials: "SR", status: "Available", badge: "available", detail: "Open to a call" },
+    { name: "Jordan Park", initials: "JP", status: "Busy", badge: "busy", detail: "In a meeting" },
+    { name: "Maya Singh", initials: "MS", status: "Free", badge: "available", detail: "Working on something" },
+  ];
+
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Syncup</h3>
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="rounded-full"
+          style={{ width: "10px", height: "10px", background: "linear-gradient(135deg, #c4b5fd, #8b5cf6)", boxShadow: "0 0 12px rgba(167,139,250,0.8)" }}
+        />
+      </div>
+
+      <div className="phone-content">
+        {/* Subtle label */}
+        <div className="text-xs font-bold px-1 pb-2" style={{ color: "var(--purple-bright)", letterSpacing: "0.1em" }}>
+          RHYTHMS NOW
+        </div>
+
+        {people.map((p, i) => (
+          <motion.div
+            key={p.name}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false }}
+            transition={{ delay: i * 0.1 }}
+            className="phone-list-item"
+            style={{ background: p.badge === "available" ? "rgba(139,92,246,0.06)" : "transparent" }}
+          >
+            <div className="phone-avatar">
+              {p.initials}
+              <span className={`phone-status-badge ${p.badge}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold truncate" style={{ color: "#fff" }}>{p.name}</div>
+              <div className="text-xs font-semibold" style={{ color: p.badge === "available" ? "var(--purple-bright)" : "var(--fg-dim)" }}>
+                {p.status}
+              </div>
+              <div className="text-xs" style={{ color: "var(--fg-dim)", fontSize: "0.65rem" }}>{p.detail}</div>
+            </div>
+          </motion.div>
+        ))}
+
+        {/* Sync hint */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.6 }}
+          className="glass-card text-center mt-2"
+          style={{ padding: "0.5rem 0.75rem", background: "linear-gradient(135deg, rgba(109,40,217,0.12), rgba(139,92,246,0.12))", borderColor: "rgba(167,139,250,0.25)" }}
+        >
+          <span className="text-xs font-bold" style={{ color: "var(--purple-bright)" }}>2 rhythms aligned</span>
+        </motion.div>
+      </div>
+
+      <PhoneTabBar active="status" />
+    </>
+  );
+}
+
+// ===== Problem Screen — "Are you free?" messages =====
+export function ProblemScreen() {
+  const messages = [
+    { text: "Are you free?", sent: true },
+    { text: "Can we talk?", sent: true },
+    { text: "Where are you?", sent: true },
+    { text: "Call me when you're available", sent: true },
+    { text: "You there?", sent: true },
+  ];
+
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Chats</h3>
+        <span style={{ fontSize: "1.2rem", color: "var(--fg-dim)" }}>···</span>
+      </div>
+
+      <div className="phone-content">
+        {/* Chat header */}
+        <div className="phone-list-item" style={{ background: "rgba(139,92,246,0.06)" }}>
+          <div className="phone-avatar">
+            AC
+            <span className="phone-status-badge busy" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold" style={{ color: "#fff" }}>Alex Chen</div>
+            <div className="text-xs" style={{ color: "var(--fg-dim)" }}>Busy · In a meeting</div>
+          </div>
+        </div>
+
+        {/* Messages — all unanswered */}
+        <div className="flex flex-col gap-2 px-1 py-3">
+          {messages.map((m, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false }}
+              transition={{ delay: i * 0.12 }}
+              className="chat-bubble sent"
+              style={{ fontSize: "0.75rem", opacity: 0.7 + i * 0.05 }}
+            >
+              {m.text}
+            </motion.div>
+          ))}
+
+          {/* No reply indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ delay: 0.8 }}
+            className="text-center py-2"
+          >
+            <span className="text-xs" style={{ color: "var(--fg-dim)", fontStyle: "italic" }}>No reply yet...</span>
+          </motion.div>
+        </div>
+      </div>
+
+      <PhoneTabBar active="chats" />
+    </>
+  );
+}
+
+// ===== Sync Screen — two rhythms aligning → SYNCED =====
+export function SyncScreen() {
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Sync</h3>
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="rounded-full"
+          style={{ width: "10px", height: "10px", background: "linear-gradient(135deg, #c4b5fd, #8b5cf6)", boxShadow: "0 0 15px rgba(167,139,250,1)" }}
+        />
+      </div>
+
+      <div className="phone-content">
+        {/* Person A */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.1 }}
+          className="phone-list-item"
+          style={{ background: "rgba(139,92,246,0.08)" }}
+        >
+          <div className="phone-avatar">
+            AC
+            <span className="phone-status-badge available" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold" style={{ color: "#fff" }}>Alex Chen</div>
+            <div className="text-xs font-semibold" style={{ color: "var(--purple-bright)" }}>Free</div>
+            <div className="text-xs" style={{ color: "var(--fg-dim)", fontSize: "0.65rem" }}>Coffee & conversation</div>
+          </div>
+        </motion.div>
+
+        {/* Connection line — animated */}
+        <div className="flex justify-center py-2">
+          <motion.div
+            animate={{ opacity: [0.2, 1, 0.2], scaleY: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            style={{ width: "2px", height: "24px", background: "linear-gradient(to bottom, transparent, #a78bfa, transparent)", boxShadow: "0 0 10px rgba(167,139,250,0.6)" }}
+          />
+        </div>
+
+        {/* Person B */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.3 }}
+          className="phone-list-item"
+          style={{ background: "rgba(139,92,246,0.08)" }}
+        >
+          <div className="phone-avatar">
+            MS
+            <span className="phone-status-badge available" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold" style={{ color: "#fff" }}>Maya Singh</div>
+            <div className="text-xs font-semibold" style={{ color: "var(--purple-bright)" }}>Free</div>
+            <div className="text-xs" style={{ color: "var(--fg-dim)", fontSize: "0.65rem" }}>Open to a call</div>
+          </div>
+        </motion.div>
+
+        {/* SYNCED badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.6, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mt-3"
+        >
+          <motion.div
+            animate={{ boxShadow: ["0 0 20px rgba(139,92,246,0.3)", "0 0 40px rgba(139,92,246,0.6)", "0 0 20px rgba(139,92,246,0.3)"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+            style={{ background: "linear-gradient(135deg, #6d28d9, #8b5cf6)", border: "1px solid rgba(196,181,253,0.5)" }}
+          >
+            <span style={{ fontSize: "0.9rem", fontWeight: 800, color: "#fff", letterSpacing: "0.15em" }}>SYNCED</span>
+          </motion.div>
+        </motion.div>
+
+        {/* Connect button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ delay: 1 }}
+          className="text-center mt-3"
+        >
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(196,181,253,0.4)", backdropFilter: "blur(10px)" }}>
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#fff" }}>Connect now</span>
+            <span style={{ fontSize: "0.8rem" }}>→</span>
+          </div>
+        </motion.div>
+      </div>
+
+      <PhoneTabBar active="status" />
+    </>
+  );
+}
+
+// ===== Connect Screen — connection happening =====
+export function ConnectScreen() {
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Connected</h3>
+        <motion.div
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="rounded-full"
+          style={{ width: "10px", height: "10px", background: "#a78bfa", boxShadow: "0 0 15px rgba(167,139,250,1)" }}
+        />
+      </div>
+
+      <div className="phone-content">
+        {/* Connected call card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="glass-card text-center"
+          style={{ padding: "1.5rem 1rem", background: "linear-gradient(135deg, rgba(109,40,217,0.12), rgba(139,92,246,0.12))", borderColor: "rgba(167,139,250,0.3)" }}
+        >
+          {/* Dual avatars */}
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="phone-avatar" style={{ margin: 0 }}>AC<span className="phone-status-badge available" /></div>
+            <motion.div
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              style={{ fontSize: "1.2rem" }}
+            >
+              ⚡
+            </motion.div>
+            <div className="phone-avatar" style={{ margin: 0 }}>MS<span className="phone-status-badge available" /></div>
+          </div>
+          <div className="text-sm font-bold mb-1" style={{ color: "#fff" }}>Alex & Maya</div>
+          <div className="text-xs mb-3" style={{ color: "var(--purple-bright)", fontWeight: 600 }}>Rhythms aligned</div>
+
+          {/* Call timer */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ delay: 0.4 }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
+            style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(167,139,250,0.25)" }}
+          >
+            <motion.div
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#a78bfa" }}
+            />
+            <span className="text-xs font-bold" style={{ color: "#fff" }}>00:42</span>
+          </motion.div>
+        </motion.div>
+
+        {/* Context */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ delay: 0.5 }}
+          className="mt-3 px-2"
+        >
+          <div className="text-xs text-center" style={{ color: "var(--fg-muted)", lineHeight: 1.5 }}>
+            Connected at the right moment.<br />No interruptions. Just timing.
+          </div>
+        </motion.div>
+
+        {/* Action buttons */}
+        <div className="flex justify-center gap-3 mt-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ delay: 0.7 }}
+            className="flex items-center justify-center rounded-full"
+            style={{ width: "40px", height: "40px", background: "rgba(139,92,246,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}
+          >
+            <span style={{ fontSize: "1rem" }}>💬</span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ delay: 0.8 }}
+            className="flex items-center justify-center rounded-full"
+            style={{ width: "40px", height: "40px", background: "linear-gradient(135deg, #6d28d9, #8b5cf6)", boxShadow: "0 4px 15px rgba(139,92,246,0.4)" }}
+          >
+            <span style={{ fontSize: "1rem" }}>📞</span>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ delay: 0.9 }}
+            className="flex items-center justify-center rounded-full"
+            style={{ width: "40px", height: "40px", background: "rgba(139,92,246,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}
+          >
+            <span style={{ fontSize: "1rem" }}>📹</span>
+          </motion.div>
+        </div>
+      </div>
+
+      <PhoneTabBar active="chats" />
+    </>
+  );
+}
+
 // ===== Status Screen =====
 export function StatusScreen() {
   const contacts = [

@@ -12,6 +12,10 @@ import {
   MayaScreen,
   PrivacyScreen,
   HomeScreen,
+  HeroScreen,
+  ProblemScreen,
+  SyncScreen,
+  ConnectScreen,
 } from "@/components/PhoneMockup";
 import { useActiveSection } from "@/components/useActiveSection";
 
@@ -25,18 +29,22 @@ const transition = { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const };
 
 // ===== Section IDs =====
 const PHONE_SECTIONS = [
-  "opening", "hero", "presence", "status", "chats",
-  "privacy", "maps", "feedtab", "blink", "maya",
+  "opening", "hero", "problem", "status", "sync", "connect",
+  "chats", "privacy", "maps", "feedtab", "blink", "maya",
   "ecosystem", "social", "final",
 ];
 
 function getPhoneScreen(sectionId: string): { screen: React.ReactNode; key: string } {
   switch (sectionId) {
     case "opening":
-    case "hero":
-    case "presence":
       return { screen: <HomeScreen />, key: "home" };
+    case "hero":
+      return { screen: <HeroScreen />, key: "hero" };
+    case "problem":
+      return { screen: <ProblemScreen />, key: "problem" };
     case "status": return { screen: <StatusScreen />, key: "status" };
+    case "sync": return { screen: <SyncScreen />, key: "sync" };
+    case "connect": return { screen: <ConnectScreen />, key: "connect" };
     case "chats": return { screen: <ChatsScreen />, key: "chats" };
     case "privacy": return { screen: <PrivacyScreen />, key: "privacy" };
     case "maps": return { screen: <MapsScreen />, key: "maps" };
@@ -254,81 +262,201 @@ export default function Home() {
               variants={fadeUp} initial="hidden" whileInView="visible"
               viewport={viewport} transition={{ ...transition, delay: 0.5 }}
               className="subheadline"
+              style={{ marginBottom: "1.5rem" }}
+            >
+              Stop asking, &ldquo;Are you free?&rdquo;
+            </motion.p>
+            <motion.p
+              variants={fadeUp} initial="hidden" whileInView="visible"
+              viewport={viewport} transition={{ ...transition, delay: 0.6 }}
+              className="body-text"
               style={{ marginBottom: "2.5rem" }}
             >
-              A new way to stay connected to the people and moments that matter.
+              Syncup helps people share their rhythm, discover when their moments align, and connect at the right time.
             </motion.p>
             <motion.div
               variants={fadeUp} initial="hidden" whileInView="visible"
               viewport={viewport} transition={{ ...transition, delay: 0.7 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <button className="cta-primary">Explore Syncup</button>
-              <button className="cta-secondary">Discover how it works</button>
+              <button className="cta-primary" onClick={() => document.getElementById("section-final")?.scrollIntoView({ behavior: "smooth" })}>
+                Get Early Access
+              </button>
+              <button className="cta-secondary" onClick={() => document.getElementById("section-problem")?.scrollIntoView({ behavior: "smooth" })}>
+                See how it works
+              </button>
             </motion.div>
           </TextSection>
 
-          {/* 03 — PRESENCE */}
-          <TextSection id="presence">
-            <Label>The problem with &quot;online&quot;</Label>
-            <motion.div
-              variants={scaleIn} initial="hidden" whileInView="visible"
-              viewport={viewport} transition={transition}
-              style={{ marginBottom: "2rem" }}
-            >
-              <div className="flex items-center gap-5 flex-wrap" style={{ marginBottom: "2rem" }}>
-                <span className="headline-medium line-through" style={{ color: "var(--fg-dim)" }}>Online</span>
-                <span className="text-2xl" style={{ color: "var(--fg-dim)" }}>/</span>
-                <span className="headline-medium line-through" style={{ color: "var(--fg-dim)" }}>Offline</span>
-              </div>
-            </motion.div>
+          {/* 03 — PROBLEM */}
+          <TextSection id="problem">
+            <Label>The problem</Label>
+            <Title>We&apos;re connected all the time.</Title>
             <motion.p
               variants={fadeUp} initial="hidden" whileInView="visible"
-              viewport={viewport} transition={transition}
-              className="subheadline"
-              style={{ marginBottom: "1rem" }}
+              viewport={viewport} transition={{ ...transition, delay: 0.2 }}
+              className="headline-medium gradient-text-static"
+              style={{ marginBottom: "2.5rem" }}
             >
-              Syncup understands something more human:
+              Yet we still don&apos;t know when to connect.
             </motion.p>
-            <Title delay={0.2}>What are you doing right now?</Title>
-            <div className="flex flex-wrap gap-2.5" style={{ marginBottom: "2.5rem" }}>
+            {/* Everyday messages — the problem */}
+            <div className="flex flex-col gap-3" style={{ marginBottom: "2.5rem" }}>
               {[
-                { label: "Driving", icon: "🚗" },
-                { label: "At lunch", icon: "🍽" },
-                { label: "Client meeting", icon: "💼" },
-                { label: "Presenting", icon: "📊" },
-                { label: "Available", icon: "✨" },
-              ].map((s, i) => (
+                "Are you free?",
+                "Can we talk?",
+                "Where are you?",
+                "Call me when you're available.",
+              ].map((msg, i) => (
                 <motion.div
-                  key={s.label}
-                  variants={scaleIn} initial="hidden" whileInView="visible"
-                  viewport={viewport} transition={{ ...transition, delay: i * 0.08 }}
-                  className="glass-card flex items-center gap-2"
-                  style={{ padding: "0.6rem 1rem" }}
+                  key={msg}
+                  variants={fadeUp} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: i * 0.1 }}
+                  className="problem-message"
                 >
-                  <span>{s.icon}</span>
-                  <span className="text-sm font-semibold" style={{ color: "var(--violet)" }}>{s.label}</span>
+                  <span style={{ color: "var(--fg-dim)", fontSize: "0.9rem", marginRight: "0.75rem" }}>→</span>
+                  <span className="text-base font-medium" style={{ color: "var(--fg-muted)" }}>{msg}</span>
                 </motion.div>
               ))}
             </div>
-            <Tagline>Life doesn&apos;t happen in one status.</Tagline>
+            <Tagline>There&apos;s a better way.</Tagline>
             <SubTagline>Syncup brings context to connection.</SubTagline>
           </TextSection>
 
           {/* 04 — STATUS */}
           <TextSection id="status">
             <Label>Feature</Label>
-            <Title>Status</Title>
+            <Title>Know their rhythm.</Title>
             <BodyText>
-              Communicate what you&apos;re currently doing. Organize your connections into groups. Know when life lines up and connect when you&apos;re both free.
+              Share what you&apos;re doing. See what others are doing. Know when life lines up — without asking.
             </BodyText>
-            <PillRow items={["Family", "Friends", "Colleagues"]} active delay={0.3} />
-            <PillRow items={["Driving", "Meeting", "Presenting", "Client meeting", "Lunch", "Free"]} delay={0.4} />
+            {/* Elegant status cards */}
+            <div className="flex flex-col gap-3" style={{ marginBottom: "2.5rem" }}>
+              {[
+                { name: "Alex Chen", initials: "AC", status: "Free", detail: "Coffee & conversation", badge: "available" },
+                { name: "Sam Rivera", initials: "SR", status: "Working", detail: "Deep focus", badge: "busy" },
+                { name: "Maya Singh", initials: "MS", status: "Available later", detail: "After 7 PM", badge: "away" },
+                { name: "Jordan Park", initials: "JP", status: "Busy", detail: "In a meeting", badge: "busy" },
+              ].map((p, i) => (
+                <motion.div
+                  key={p.name}
+                  variants={fadeUp} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: i * 0.1 }}
+                  whileHover={{ y: -3, scale: 1.01 }}
+                  className="status-card"
+                >
+                  <div className="status-card-avatar">
+                    {p.initials}
+                    <span className={`phone-status-badge ${p.badge}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold" style={{ color: "#fff" }}>{p.name}</div>
+                    <div className="text-xs font-bold uppercase tracking-wide" style={{ color: p.badge === "available" ? "var(--purple-bright)" : "var(--fg-dim)", letterSpacing: "0.1em" }}>
+                      {p.status}
+                    </div>
+                    <div className="text-xs" style={{ color: "var(--fg-muted)" }}>{p.detail}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
             <Tagline>Know when life lines up.</Tagline>
             <SubTagline>Connect when you&apos;re both free.</SubTagline>
           </TextSection>
 
-          {/* 05 — CHATS */}
+          {/* 05 — SYNC */}
+          <TextSection id="sync">
+            <Label>The moment</Label>
+            <Title>When two rhythms align, something happens.</Title>
+            <BodyText>
+              Syncup watches the rhythms of people you care about. When moments line up, it shows you.
+            </BodyText>
+            {/* Sync visualization — two people aligning */}
+            <div className="sync-viz" style={{ marginBottom: "2.5rem" }}>
+              {/* Person A */}
+              <motion.div
+                variants={fadeUp} initial="hidden" whileInView="visible"
+                viewport={viewport} transition={{ ...transition, delay: 0.2 }}
+                className="sync-person"
+              >
+                <div className="status-card-avatar">
+                  AC
+                  <span className="phone-status-badge available" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold" style={{ color: "#fff" }}>Alex Chen</div>
+                  <div className="text-xs font-bold" style={{ color: "var(--purple-bright)" }}>● Free</div>
+                </div>
+              </motion.div>
+
+              {/* Connection line */}
+              <div className="sync-line-wrap">
+                <motion.div
+                  variants={fadeIn} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: 0.4 }}
+                  className="sync-line"
+                />
+                <motion.div
+                  variants={scaleIn} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: 0.6 }}
+                  className="sync-badge"
+                >
+                  SYNCED
+                </motion.div>
+                <motion.div
+                  variants={fadeIn} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: 0.4 }}
+                  className="sync-line"
+                />
+              </div>
+
+              {/* Person B */}
+              <motion.div
+                variants={fadeUp} initial="hidden" whileInView="visible"
+                viewport={viewport} transition={{ ...transition, delay: 0.3 }}
+                className="sync-person"
+              >
+                <div className="status-card-avatar">
+                  MS
+                  <span className="phone-status-badge available" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold" style={{ color: "#fff" }}>Maya Singh</div>
+                  <div className="text-xs font-bold" style={{ color: "var(--purple-bright)" }}>● Free</div>
+                </div>
+              </motion.div>
+            </div>
+            <Tagline>Two rhythms. One moment.</Tagline>
+            <SubTagline>The right time finds you.</SubTagline>
+          </TextSection>
+
+          {/* 06 — CONNECT */}
+          <TextSection id="connect">
+            <Label>The outcome</Label>
+            <Title>Don&apos;t interrupt the moment. Find it.</Title>
+            <BodyText>
+              When rhythms align, Syncup makes it effortless to connect. A call, a chat, a shared moment — at exactly the right time.
+            </BodyText>
+            <div className="flex flex-col gap-3" style={{ marginBottom: "2.5rem" }}>
+              {[
+                { icon: "📞", label: "Call when you're both free" },
+                { icon: "💬", label: "Chat without the awkward &ldquo;you there?&rdquo;" },
+                { icon: "📍", label: "Meet up when you're nearby" },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeUp} initial="hidden" whileInView="visible"
+                  viewport={viewport} transition={{ ...transition, delay: i * 0.1 }}
+                  className="connect-item"
+                >
+                  <span style={{ fontSize: "1.2rem" }}>{item.icon}</span>
+                  <span className="text-sm font-semibold" style={{ color: "var(--violet)" }} dangerouslySetInnerHTML={{ __html: item.label }} />
+                </motion.div>
+              ))}
+            </div>
+            <Tagline>Connect when it matters.</Tagline>
+          </TextSection>
+
+          {/* 07 — CHATS */}
           <TextSection id="chats">
             <Label>Feature</Label>
             <Title>Chats</Title>
@@ -346,7 +474,7 @@ export default function Home() {
             <Tagline>Talk when it matters.</Tagline>
           </TextSection>
 
-          {/* 06 — PRIVACY */}
+          {/* 08 — PRIVACY */}
           <TextSection id="privacy">
             <Label>Feature</Label>
             <Title>Privacy</Title>
@@ -357,7 +485,7 @@ export default function Home() {
             <Tagline>Your conversations stay yours.</Tagline>
           </TextSection>
 
-          {/* 07 — MAPS */}
+          {/* 09 — MAPS */}
           <TextSection id="maps">
             <Label>Feature</Label>
             <Title>Maps</Title>
@@ -369,7 +497,7 @@ export default function Home() {
             <SubTagline>Find where to go together.</SubTagline>
           </TextSection>
 
-          {/* 08 — FEEDTAB */}
+          {/* 10 — FEEDTAB */}
           <TextSection id="feedtab">
             <Label>Feature</Label>
             <Title>Feedtab</Title>
@@ -390,7 +518,7 @@ export default function Home() {
             <SubTagline>Share the vibe.</SubTagline>
           </TextSection>
 
-          {/* 09 — BLINK */}
+          {/* 11 — BLINK */}
           <TextSection id="blink">
             <Label>Feature</Label>
             <MegaTitle>Blink</MegaTitle>
@@ -401,7 +529,7 @@ export default function Home() {
             <SubTagline>Blink. Before the moment passes.</SubTagline>
           </TextSection>
 
-          {/* 10 — MAYA */}
+          {/* 12 — MAYA */}
           <TextSection id="maya">
             <Label>Intelligent assistant</Label>
             <MegaTitle>Maya</MegaTitle>
@@ -413,8 +541,9 @@ export default function Home() {
             <SubTagline>Meet Maya.</SubTagline>
           </TextSection>
 
-          {/* 11 — ECOSYSTEM */}
+          {/* 13 — ECOSYSTEM */}
           <TextSection id="ecosystem">
+            <Label>More than messaging</Label>
             <MegaTitle>Everything connects.</MegaTitle>
             <motion.p
               variants={fadeUp} initial="hidden" whileInView="visible"
@@ -445,7 +574,7 @@ export default function Home() {
             </div>
           </TextSection>
 
-          {/* 12 — SOCIAL FACE */}
+          {/* 14 — SOCIAL FACE */}
           <TextSection id="social">
             <Tagline>A more human way to be social.</Tagline>
             <motion.p
@@ -459,14 +588,30 @@ export default function Home() {
             <MegaTitle delay={0.3}>Syncup</MegaTitle>
           </TextSection>
 
-          {/* 13 — FINAL */}
+          {/* 15 — FINAL */}
           <TextSection id="final">
+            <motion.p
+              variants={fadeUp} initial="hidden" whileInView="visible"
+              viewport={viewport} transition={{ ...transition, delay: 0.1 }}
+              className="headline-medium gradient-text-static"
+              style={{ marginBottom: "1.5rem" }}
+            >
+              Find your people.
+            </motion.p>
+            <motion.p
+              variants={fadeUp} initial="hidden" whileInView="visible"
+              viewport={viewport} transition={{ ...transition, delay: 0.2 }}
+              className="headline-medium gradient-text-static"
+              style={{ marginBottom: "1.5rem" }}
+            >
+              Find your rhythm.
+            </motion.p>
             <div style={{ marginBottom: "2.5rem" }}>
               {["ONE LIFE.", "ONE RHYTHM.", "ONE SYNC."].map((line, i) => (
                 <motion.h2
                   key={line}
                   variants={fadeUp} initial="hidden" whileInView="visible"
-                  viewport={viewport} transition={{ ...transition, delay: i * 0.12 }}
+                  viewport={viewport} transition={{ ...transition, delay: 0.3 + i * 0.12 }}
                   className="headline-mega gradient-text"
                   style={{ marginBottom: "0.25rem" }}
                 >
@@ -476,16 +621,18 @@ export default function Home() {
             </div>
             <motion.div
               variants={fadeUp} initial="hidden" whileInView="visible"
-              viewport={viewport} transition={{ ...transition, delay: 0.5 }}
+              viewport={viewport} transition={{ ...transition, delay: 0.7 }}
               className="flex flex-col sm:flex-row gap-4"
               style={{ marginBottom: "3rem" }}
             >
-              <button className="cta-primary">Enter Syncup</button>
-              <button className="cta-secondary">Explore the experience</button>
+              <button className="cta-primary">Join Syncup</button>
+              <button className="cta-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                Back to top
+              </button>
             </motion.div>
             <motion.p
               variants={fadeIn} initial="hidden" whileInView="visible"
-              viewport={viewport} transition={{ ...transition, delay: 0.7 }}
+              viewport={viewport} transition={{ ...transition, delay: 0.9 }}
               className="text-sm"
               style={{ color: "var(--fg-dim)", letterSpacing: "0.25em", textTransform: "uppercase" }}
             >

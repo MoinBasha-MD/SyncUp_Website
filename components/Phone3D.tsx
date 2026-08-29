@@ -39,10 +39,11 @@ export function Phone3D({ children, screenKey }: Phone3DProps) {
   // Animation loop
   useEffect(() => {
     let raf: number;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const animate = () => {
-      // Idle auto-rotation when not dragging
-      if (!dragging.current) {
+      // Idle auto-rotation when not dragging (skip if reduced motion)
+      if (!dragging.current && !prefersReducedMotion) {
         idleTime.current += 0.016;
         if (idleTime.current > 2) {
           // Gentle sway — less on mobile so it looks like a real phone
