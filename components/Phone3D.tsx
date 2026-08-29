@@ -18,10 +18,10 @@ export function Phone3D({ children, screenKey }: Phone3DProps) {
   const phoneRef = useRef<HTMLDivElement>(null);
 
   // Target rotation/scale (what the user is dragging toward)
-  // Less rotation on mobile for better readability
+  // Less rotation on mobile for better readability — looks more like a real phone face
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 1024;
-  const initialRotX = isMobile ? 2 : 4;
-  const initialRotY = isMobile ? -8 : -15;
+  const initialRotX = isMobile ? 0 : 4;
+  const initialRotY = isMobile ? -3 : -15;
   const targetRot = useRef({ x: initialRotX, y: initialRotY });
   // Current rotation/scale (smoothed toward target)
   const currentRot = useRef({ x: initialRotX, y: initialRotY });
@@ -45,12 +45,12 @@ export function Phone3D({ children, screenKey }: Phone3DProps) {
       if (!dragging.current) {
         idleTime.current += 0.016;
         if (idleTime.current > 2) {
-          // Gentle sway — less on mobile
+          // Gentle sway — less on mobile so it looks like a real phone
           const mobile = window.innerWidth <= 1024;
-          const baseY = mobile ? -8 : -15;
-          const swayY = mobile ? 4 : 8;
-          const baseX = mobile ? 2 : 4;
-          const swayX = mobile ? 2 : 3;
+          const baseY = mobile ? -3 : -15;
+          const swayY = mobile ? 2 : 8;
+          const baseX = mobile ? 0 : 4;
+          const swayX = mobile ? 1 : 3;
           targetRot.current.y = baseY + Math.sin(idleTime.current * 0.3) * swayY;
           targetRot.current.x = baseX + Math.sin(idleTime.current * 0.2) * swayX;
         }
