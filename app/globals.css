@@ -345,23 +345,279 @@ body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: var(--bg-deep);
+  background: radial-gradient(ellipse at center, #0d0820 0%, #050308 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 1s ease, visibility 1s ease;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
 .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-.loading-text {
-  font-size: 0.9rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
+/* ===== Loader phone (iPhone 17 Pro style) ===== */
+.loader-phone {
+  position: relative;
+  width: 280px;
+  height: 580px;
+}
+
+.loader-phone-glow {
+  position: absolute;
+  inset: -60px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 65%);
+  filter: blur(50px);
+  z-index: 0;
+}
+
+.loader-phone-body {
+  position: relative;
+  width: 280px;
+  height: 580px;
+  border-radius: 3.2rem;
+  background: linear-gradient(145deg, #2a1a4a, #150a28 50%, #0a0518);
+  border: 2px solid rgba(167, 139, 250, 0.3);
+  box-shadow:
+    0 0 0 5px rgba(10, 5, 20, 0.98),
+    0 0 0 6px rgba(167, 139, 250, 0.15),
+    0 50px 120px rgba(139, 92, 246, 0.4),
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    inset 0 3px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* Side buttons — volume + power */
+.loader-phone-btn {
+  position: absolute;
+  background: linear-gradient(90deg, #0a0518, #1a1035, #0a0518);
+  border-radius: 2px;
+}
+
+.loader-phone-btn-vol {
+  left: -7px;
+  top: 130px;
+  width: 4px;
+  height: 60px;
+  box-shadow: 0 -40px 0 #0a0518, 0 -50px 0 #0a0518;
+}
+
+.loader-phone-btn-pwr {
+  right: -7px;
+  top: 140px;
+  width: 4px;
+  height: 70px;
+}
+
+/* Screen */
+.loader-phone-screen {
+  position: absolute;
+  inset: 7px;
+  border-radius: 2.7rem;
+  background: linear-gradient(180deg, #0a0418 0%, #0d0820 50%, #0a0418 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Island */
+.loader-phone-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 26px;
+  background: #000;
+  border-radius: 9999px;
+  z-index: 10;
+}
+
+/* Status bar */
+.loader-phone-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  z-index: 5;
+}
+
+.loader-phone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Content area */
+.loader-phone-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  gap: 0.5rem;
+}
+
+/* ===== Loading phase ===== */
+.loader-logo-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-logo-orb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #c4b5fd, #8b5cf6 60%, #6d28d9);
+  box-shadow: 0 0 30px rgba(167, 139, 250, 0.8), 0 0 60px rgba(139, 92, 246, 0.4);
+  animation: loader-orb-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loader-orb-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(167, 139, 250, 0.8), 0 0 60px rgba(139, 92, 246, 0.4); }
+  50% { transform: scale(1.3); box-shadow: 0 0 40px rgba(167, 139, 250, 1), 0 0 80px rgba(139, 92, 246, 0.6); }
+}
+
+.loader-logo-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(167, 139, 250, 0.4);
+  border-radius: 50%;
+  animation: loader-ring-spin 2s linear infinite;
+}
+
+.loader-logo-ring-2 {
+  inset: -12px;
+  border-color: rgba(196, 181, 253, 0.2);
+  animation: loader-ring-spin 3s linear infinite reverse;
+}
+
+@keyframes loader-ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loader-logo-text {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #c4b5fd, #8b5cf6, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.loader-logo-sub {
+  font-size: 0.75rem;
   color: var(--fg-muted);
-  margin-top: 2rem;
-  animation: pulse-glow 2s ease-in-out infinite;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+/* Progress bar */
+.loader-progress-track {
+  width: 180px;
+  height: 4px;
+  background: rgba(167, 139, 250, 0.15);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.loader-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c4b5fd);
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+  transition: width 0.05s linear;
+}
+
+.loader-progress-pct {
+  font-size: 0.65rem;
+  color: var(--fg-muted);
+  margin-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Welcome phase ===== */
+.loader-welcome-logo {
+  margin-bottom: 1rem;
+  animation: loader-welcome-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.loader-logo-orb-done {
+  width: 40px;
+  height: 40px;
+  animation: none;
+  box-shadow: 0 0 40px rgba(167, 139, 250, 1), 0 0 80px rgba(139, 92, 246, 0.5);
+}
+
+.loader-welcome-title {
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.1em;
+  animation: loader-welcome-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.loader-welcome-name {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #c4b5fd, #8b5cf6, #a78bfa, #fff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: loader-welcome-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both,
+             loader-name-shimmer 3s ease-in-out infinite 0.8s;
+}
+
+.loader-welcome-tag {
+  font-size: 0.7rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  animation: loader-welcome-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+@keyframes loader-welcome-in {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes loader-name-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===== Loader responsive ===== */
+@media (max-width: 480px) {
+  .loader-phone { width: 220px; height: 460px; }
+  .loader-phone-body { width: 220px; height: 460px; border-radius: 2.5rem; }
+  .loader-phone-screen { inset: 6px; border-radius: 2.1rem; }
+  .loader-phone-island { width: 70px; height: 22px; top: 10px; }
+  .loader-phone-status { padding: 12px 18px 4px; font-size: 0.7rem; }
+  .loader-logo-wrap { width: 64px; height: 64px; }
+  .loader-logo-orb { width: 22px; height: 22px; }
+  .loader-logo-text { font-size: 1.4rem; }
+  .loader-logo-sub { font-size: 0.65rem; }
+  .loader-progress-track { width: 140px; }
+  .loader-welcome-name { font-size: 1.8rem; }
+  .loader-welcome-title { font-size: 0.9rem; }
+  .loader-welcome-tag { font-size: 0.6rem; }
+  .loader-logo-orb-done { width: 32px; height: 32px; }
 }
 
 /* ===== Scroll indicator ===== */
