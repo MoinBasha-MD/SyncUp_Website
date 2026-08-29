@@ -801,6 +801,7 @@ body {
   /* On mobile: phone floats at bottom-right, stays visible while scrolling */
   .split-right {
     position: fixed;
+    top: auto;
     bottom: 0.5rem;
     right: 0.5rem;
     width: 160px;
@@ -852,6 +853,7 @@ body {
   .split-right {
     width: 130px;
     height: 260px;
+    top: auto;
     bottom: 0.5rem;
     right: 0.4rem;
   }
