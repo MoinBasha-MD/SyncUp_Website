@@ -1,14 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Phone3D } from "@/components/Phone3D";
 import {
   StatusScreen,
   ChatsScreen,
   MapsScreen,
-  VibesScreen,
-  BlinkScreen,
   MayaScreen,
   PrivacyScreen,
   HomeScreen,
@@ -16,8 +14,38 @@ import {
   ProblemScreen,
   SyncScreen,
   ConnectScreen,
+  RippleScreen,
+  LiveScreen,
+  SyncSpacePhoneScreen,
+  PulseScreen,
 } from "@/components/PhoneMockup";
+import { GlobeScene } from "@/components/GlobeScene";
+import { WaitlistModal } from "@/components/WaitlistModal";
 import { useActiveSection } from "@/components/useActiveSection";
+import { getWaitlistCount } from "@/lib/waitlist";
+
+function JoinButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button className="cta-primary" onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
+function JoinCount({ count }: { count: number | null }) {
+  if (count === null) return null;
+  return (
+    <p className="join-count">
+      {count > 0 ? (
+        <>
+          Join <strong>{count.toLocaleString()}</strong> people in sync 💜
+        </>
+      ) : (
+        <>Be the first in sync 💜</>
+      )}
+    </p>
+  );
+}
 
 // ===== Animation variants =====
 const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } };
@@ -30,7 +58,8 @@ const transition = { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const };
 // ===== Section IDs =====
 const PHONE_SECTIONS = [
   "opening", "hero", "problem", "status", "sync", "connect",
-  "chats", "privacy", "maps", "feedtab", "blink", "maya",
+  "world", "ripples", "live", "syncspace", "pulse", "connections",
+  "chats", "privacy", "maps", "maya",
   "ecosystem", "social", "final",
 ];
 
@@ -45,11 +74,15 @@ function getPhoneScreen(sectionId: string): { screen: React.ReactNode; key: stri
     case "status": return { screen: <StatusScreen />, key: "status" };
     case "sync": return { screen: <SyncScreen />, key: "sync" };
     case "connect": return { screen: <ConnectScreen />, key: "connect" };
+    case "world": return { screen: <RippleScreen />, key: "ripple" };
+    case "ripples": return { screen: <RippleScreen />, key: "ripple" };
+    case "live": return { screen: <LiveScreen />, key: "live" };
+    case "syncspace": return { screen: <SyncSpacePhoneScreen />, key: "syncspace" };
+    case "pulse": return { screen: <PulseScreen />, key: "pulse" };
+    case "connections": return { screen: <PulseScreen />, key: "pulse" };
     case "chats": return { screen: <ChatsScreen />, key: "chats" };
     case "privacy": return { screen: <PrivacyScreen />, key: "privacy" };
     case "maps": return { screen: <MapsScreen />, key: "maps" };
-    case "feedtab": return { screen: <VibesScreen />, key: "feedtab" };
-    case "blink": return { screen: <BlinkScreen />, key: "blink" };
     case "maya": return { screen: <MayaScreen />, key: "maya" };
     default: return { screen: <HomeScreen />, key: "home" };
   }
@@ -197,18 +230,19 @@ function FeatureGrid({ items, delay = 0.3 }: { items: { label: string; icon: str
 }
 
 // ===== Text section wrapper =====
-function TextSection({ id, children }: { id: string; children: React.ReactNode }) {
+function TextSection({ id, children, world = false }: { id: string; children: React.ReactNode; world?: boolean }) {
   return (
     <section
       id={`section-${id}`}
+      className={world ? "world-band" : undefined}
       style={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        padding: "4rem 0",
+        padding: world ? "4rem var(--page-pad-x)" : "4rem 0",
       }}
     >
-      <div className="max-w-xl w-full">{children}</div>
+      <div className="max-w-xl w-full" style={{ position: "relative", zIndex: 1 }}>{children}</div>
     </section>
   );
 }
@@ -217,6 +251,20 @@ function TextSection({ id, children }: { id: string; children: React.ReactNode }
 export default function Home() {
   const activeSection = useActiveSection(PHONE_SECTIONS);
   const { screen, key } = getPhoneScreen(activeSection);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [joinedCount, setJoinedCount] = useState<number | null>(null);
+  const openWaitlist = useCallback(() => setWaitlistOpen(true), []);
+  const closeWaitlist = useCallback(() => setWaitlistOpen(false), []);
+
+  useEffect(() => {
+    let alive = true;
+    getWaitlistCount().then((count) => {
+      if (alive && count !== null) setJoinedCount(count);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   return (
     <>
@@ -279,13 +327,12 @@ export default function Home() {
               viewport={viewport} transition={{ ...transition, delay: 0.7 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <button className="cta-primary" onClick={() => document.getElementById("section-final")?.scrollIntoView({ behavior: "smooth" })}>
-                Get Early Access
-              </button>
+              <JoinButton onClick={openWaitlist}>Get Early Access</JoinButton>
               <button className="cta-secondary" onClick={() => document.getElementById("section-problem")?.scrollIntoView({ behavior: "smooth" })}>
                 See how it works
               </button>
             </motion.div>
+            <JoinCount count={joinedCount} />
           </TextSection>
 
           {/* 03 — PROBLEM */}
@@ -456,6 +503,105 @@ export default function Home() {
             <Tagline>Connect when it matters.</Tagline>
           </TextSection>
 
+          {/* ===== ACT II — WORLD ===== */}
+          <TextSection id="world" world>
+            <GlobeScene />
+            <span className="act-label">Act II — The world</span>
+            <Title>Your circle is not the whole world.</Title>
+            <BodyText>
+              Step outside your contacts. Syncup&apos;s Open Network shows what&apos;s happening around you — gatherings, live moments, and people moving through the same places you are.
+            </BodyText>
+            <PillRow items={["Nearby ripples", "Live rooms", "Public moments"]} delay={0.3} />
+            <Tagline>Discover what&apos;s already happening.</Tagline>
+          </TextSection>
+
+          <TextSection id="ripples" world>
+            <span className="act-label">Open Network</span>
+            <MegaTitle>Ripples</MegaTitle>
+            <BodyText>
+              Start something or join what&apos;s already moving. Ripples are scheduled meetups, spontaneous plans and live events — with a place, a time, and a cap on how many can join.
+            </BodyText>
+            <FeatureGrid
+              items={[
+                { label: "Scheduled & live", icon: "◉" },
+                { label: "Place-based", icon: "◎" },
+                { label: "Participant caps", icon: "◔" },
+                { label: "Public or open", icon: "◇" },
+              ]}
+            />
+            <Tagline>Join the moment, not the feed.</Tagline>
+          </TextSection>
+
+          <TextSection id="live" world>
+            <span className="act-label">Open Network</span>
+            <MegaTitle>Live</MegaTitle>
+            <BodyText>
+              Go live from wherever the moment is. Viewers join in real time, react, and comment while it happens. When it ends, it&apos;s gone.
+            </BodyText>
+            <div className="live-stage">
+              <div className="live-stage-top">
+                <span className="live-badge">LIVE</span>
+                <span className="live-viewers">1.2k watching</span>
+              </div>
+              <div className="live-comments">
+                <span className="live-comment">Maya: this view 😍</span>
+                <span className="live-comment">Alex: where is this?</span>
+                <span className="live-comment">Sam: joining now!</span>
+              </div>
+              <div className="live-wave">
+                {[...Array(9)].map((_, i) => (
+                  <span key={i} style={{ height: `${30 + ((i * 17) % 70)}%`, animationDelay: `${i * 0.08}s` }} />
+                ))}
+              </div>
+            </div>
+            <Tagline>Be there while it happens.</Tagline>
+          </TextSection>
+
+          {/* ===== ACT III — TOGETHER ===== */}
+          <TextSection id="syncspace">
+            <span className="act-label">Act III — Together</span>
+            <MegaTitle>Sync Space</MegaTitle>
+            <BodyText>
+              Your private space for businesses and apps. One Sync ID, one inbox for codes and receipts — and you decide exactly what each connected app can see.
+            </BodyText>
+            <FeatureGrid
+              items={[
+                { label: "One Sync ID", icon: "◎" },
+                { label: "You control access", icon: "◇" },
+                { label: "Codes & receipts", icon: "▤" },
+                { label: "Revoke anytime", icon: "⌁" },
+              ]}
+            />
+            <Tagline>One identity. Every connection yours.</Tagline>
+          </TextSection>
+
+          <TextSection id="pulse">
+            <span className="act-label">Pulse</span>
+            <Title>Pulse</Title>
+            <BodyText>
+              Not a feed. A pulse. Small moments from the people you actually talk to — a free hour, a finished run, a sunset worth sharing. No algorithm, no performance.
+            </BodyText>
+            <PillRow items={["Free now", "Shared moments", "No algorithm"]} active delay={0.3} />
+            <Tagline>Small moments. Close people.</Tagline>
+          </TextSection>
+
+          <TextSection id="connections">
+            <span className="act-label">Connect</span>
+            <Title>More signal. Less noise.</Title>
+            <BodyText>
+              Connection requests, mutual friends and shared communities — so the people in your Syncup are people you actually know.
+            </BodyText>
+            <FeatureGrid
+              items={[
+                { label: "Requests", icon: "＋" },
+                { label: "Mutual friends", icon: "◍" },
+                { label: "Shared spaces", icon: "◎" },
+                { label: "You decide", icon: "◇" },
+              ]}
+            />
+            <Tagline>Connect with intention.</Tagline>
+          </TextSection>
+
           {/* 07 — CHATS */}
           <TextSection id="chats">
             <Label>Feature</Label>
@@ -497,46 +643,14 @@ export default function Home() {
             <SubTagline>Find where to go together.</SubTagline>
           </TextSection>
 
-          {/* 10 — FEEDTAB */}
-          <TextSection id="feedtab">
-            <Label>Feature</Label>
-            <Title>Feedtab</Title>
-            <BodyText>
-              Life being shared, not just an endless content feed. Vibes, short videos, photos, audios, text, uploads, and stories.
-            </BodyText>
-            <FeatureGrid
-              items={[
-                { label: "Vibes", icon: "✨" },
-                { label: "Short videos", icon: "🎬" },
-                { label: "Photos", icon: "📷" },
-                { label: "Audios", icon: "🎵" },
-                { label: "Text", icon: "📝" },
-                { label: "Stories", icon: "⭕" },
-              ]}
-            />
-            <Tagline>Share the moment.</Tagline>
-            <SubTagline>Share the vibe.</SubTagline>
-          </TextSection>
-
-          {/* 11 — BLINK */}
-          <TextSection id="blink">
-            <Label>Feature</Label>
-            <MegaTitle>Blink</MegaTitle>
-            <BodyText>
-              Capture what&apos;s happening right now. A photo. A short clip. A spontaneous moment. If it receives engagement, it stays visible for its <span style={{ color: "var(--purple-bright)", fontWeight: 700 }}>12-hour lifespan</span>. When time expires, it dissolves.
-            </BodyText>
-            <Tagline>Some moments are meant to be now.</Tagline>
-            <SubTagline>Blink. Before the moment passes.</SubTagline>
-          </TextSection>
-
-          {/* 12 — MAYA */}
+          {/* 10 — MAYA */}
           <TextSection id="maya">
             <Label>Intelligent assistant</Label>
             <MegaTitle>Maya</MegaTitle>
             <BodyText>
               An elegant abstract intelligence that connects your digital life. Maya understands context across all Syncup systems — suggesting connections, surfacing moments, and bringing everything together.
             </BodyText>
-            <PillRow items={["Status", "Chats", "Maps", "Feedtab", "Blink"]} active delay={0.3} />
+            <PillRow items={["Status", "Chats", "Maps", "Open Network", "Pulse"]} active delay={0.3} />
             <Tagline>One intelligent layer connecting your digital life.</Tagline>
             <SubTagline>Meet Maya.</SubTagline>
           </TextSection>
@@ -554,7 +668,7 @@ export default function Home() {
               One place for the people, conversations, moments and experiences that make up your life.
             </motion.p>
             <div className="flex flex-wrap gap-2.5 items-center">
-              {["People", "Status", "Chats", "Maps", "Feedtab", "Blink", "Maya"].map((item, i) => (
+              {["People", "Status", "Chats", "Maps", "Open Network", "Sync Space", "Maya"].map((item, i) => (
                 <motion.div
                   key={item}
                   variants={scaleIn} initial="hidden" whileInView="visible"
@@ -625,11 +739,12 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-4"
               style={{ marginBottom: "3rem" }}
             >
-              <button className="cta-primary">Join Syncup</button>
+              <JoinButton onClick={openWaitlist}>Join Syncup</JoinButton>
               <button className="cta-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
                 Back to top
               </button>
             </motion.div>
+            <JoinCount count={joinedCount} />
             <motion.p
               variants={fadeIn} initial="hidden" whileInView="visible"
               viewport={viewport} transition={{ ...transition, delay: 0.9 }}
@@ -648,6 +763,14 @@ export default function Home() {
           </Phone3D>
         </div>
       </div>
+
+      {waitlistOpen && (
+        <WaitlistModal
+          onClose={closeWaitlist}
+          initialCount={joinedCount}
+          onJoined={setJoinedCount}
+        />
+      )}
     </>
   );
 }

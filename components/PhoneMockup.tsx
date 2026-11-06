@@ -610,152 +610,6 @@ export function ChatsScreen() {
   );
 }
 
-// ===== Vibes Screen (Feedtab) — richer content =====
-export function VibesScreen() {
-  const posts = [
-    {
-      name: "Sam Rivera", initials: "SR", time: "5m", type: "vibe",
-      text: "Golden hour from the rooftop 🌅 Nothing beats this view",
-      likes: 247, comments: 18, shares: 5, bg: "photo-sunset", emoji: "🌅",
-      location: "Downtown LA",
-    },
-    {
-      name: "Lisa Kim", initials: "LK", time: "20m", type: "photo",
-      text: "Weekend in the mountains ✨ Best decision ever",
-      likes: 892, comments: 43, shares: 12, bg: "photo-mountain", emoji: "🏔",
-      location: "Aspen, CO",
-    },
-    {
-      name: "Alex Chen", initials: "AC", time: "1h", type: "video",
-      text: "Behind the scenes at today's shoot 🎬",
-      likes: 1240, comments: 87, shares: 34, bg: "photo-city", emoji: "🎬",
-      duration: "0:32", location: "Studio 5",
-    },
-    {
-      name: "Maya Singh", initials: "MS", time: "2h", type: "audio",
-      text: "New track I've been working on 🎵 Let me know what you think",
-      likes: 418, comments: 29, shares: 8, bg: "photo-night", emoji: "🎵",
-      duration: "2:14",
-    },
-    {
-      name: "Dan Foster", initials: "DF", time: "3h", type: "photo",
-      text: "Morning coffee hit different today ☕",
-      likes: 156, comments: 12, shares: 2, bg: "photo-cafe", emoji: "☕",
-      location: "Brew & Co.",
-    },
-    {
-      name: "Nina Patel", initials: "NP", time: "5h", type: "vibe",
-      text: "Aurora borealis trip was unreal 🌌 Best moment of the year",
-      likes: 2150, comments: 120, shares: 67, bg: "photo-aurora", emoji: "🌌",
-      location: "Tromsø, Norway",
-    },
-  ];
-
-  return (
-    <>
-      <div className="phone-header">
-        <h3>Feedtab</h3>
-        <div className="flex gap-2">
-          {["✨", "📷", "🎬", "🎵"].map((icon, i) => (
-            <span key={i} style={{ fontSize: "0.9rem", color: "var(--purple-bright)" }}>{icon}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* Stories row */}
-      <div className="flex gap-2.5 px-3 pb-3 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-        {[
-          { name: "You", initials: "+", hasStory: false },
-          { name: "Sam", initials: "SR", hasStory: true },
-          { name: "Lisa", initials: "LK", hasStory: true },
-          { name: "Alex", initials: "AC", hasStory: true },
-          { name: "Maya", initials: "MS", hasStory: true },
-          { name: "Dan", initials: "DF", hasStory: true },
-          { name: "Nina", initials: "NP", hasStory: true },
-        ].map((s, i) => (
-          <div key={s.name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <div
-              className="w-13 h-13 rounded-full flex items-center justify-center text-xs font-bold text-white"
-              style={{
-                width: "48px",
-                height: "48px",
-                background: i === 0 ? "rgba(25,15,50,0.8)" : "linear-gradient(135deg, #6d28d9, #a78bfa)",
-                border: i === 0 ? "2px dashed rgba(167,139,250,0.4)" : "2px solid rgba(196,181,253,0.7)",
-                boxShadow: s.hasStory ? "0 0 12px rgba(139,92,246,0.3)" : "none",
-              }}
-            >
-              {s.initials}
-            </div>
-            <span style={{ color: "var(--fg-muted)", fontSize: "0.55rem", fontWeight: 600 }}>{s.name}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="phone-content">
-        {posts.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ delay: i * 0.08 }}
-            className="phone-media-card"
-          >
-            {/* User header */}
-            <div className="flex items-center gap-2 p-2.5">
-              <div className="phone-avatar-sm">{p.initials}</div>
-              <div className="flex-1">
-                <div className="text-xs font-bold" style={{ color: "#fff" }}>{p.name}</div>
-                <div className="text-xs flex items-center gap-1" style={{ color: "var(--fg-dim)", fontSize: "0.6rem" }}>
-                  {p.time} ago
-                  {p.location && <><span>·</span><span>📍 {p.location}</span></>}
-                </div>
-              </div>
-              <span style={{ color: "var(--fg-dim)", fontSize: "0.8rem" }}>···</span>
-            </div>
-            {/* Media — photo-like gradient */}
-            <div className={`phone-media-img ${p.bg}`}>
-              <span style={{ fontSize: "2.5rem", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }}>{p.emoji}</span>
-              {/* Shimmer overlay */}
-              <div className="absolute inset-0 shimmer" />
-              {p.duration && (
-                <span className="absolute bottom-2 right-2 text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: "0.6rem" }}>
-                  {p.type === "video" ? "▶" : "🎵"} {p.duration}
-                </span>
-              )}
-              {p.type === "video" && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.3)" }}>
-                    <span style={{ fontSize: "1.2rem" }}>▶</span>
-                  </div>
-                </div>
-              )}
-              {p.type === "audio" && (
-                <div className="absolute bottom-2 left-2 right-2 flex items-center gap-1 h-8">
-                  {Array.from({ length: 35 }).map((_, j) => (
-                    <div key={j} className="waveform-bar" style={{ animationDelay: `${j * 0.04}s`, height: "30%" }} />
-                  ))}
-                </div>
-              )}
-            </div>
-            {/* Caption + actions */}
-            <div className="p-2.5">
-              <div className="text-xs mb-2 font-medium" style={{ color: "#fff" }}>{p.text}</div>
-              <div className="phone-media-actions" style={{ fontSize: "0.75rem" }}>
-                <span style={{ color: "var(--purple-bright)" }}>❤ {p.likes}</span>
-                <span>💬 {p.comments}</span>
-                <span>↗ {p.shares}</span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <PhoneTabBar active="feedtab" />
-    </>
-  );
-}
-
 // ===== Maps Screen — richer with places =====
 export function MapsScreen() {
   const friends = [
@@ -808,7 +662,7 @@ export function MapsScreen() {
         <div className="phone-map-road" style={{ top: "65%", left: 0, right: 0, height: "2px", transform: "rotate(3deg)" }} />
 
         {/* Friend pins */}
-        {friends.map((f, i) => (
+        {friends.map((f) => (
           <div key={f.name} className="phone-map-pin" style={{ top: f.top, left: f.left }}>
             {f.isYou && <div className="phone-map-ring" style={{ width: "36px", height: "36px", top: "-11px", left: "-11px" }} />}
             <div className="phone-map-pin-dot" style={f.isYou ? { width: "16px", height: "16px", background: "#a78bfa" } : { background: f.color }} />
@@ -867,81 +721,6 @@ export function MapsScreen() {
   );
 }
 
-// ===== Blink Screen =====
-export function BlinkScreen() {
-  const blinks = [
-    { name: "Sam Rivera", initials: "SR", time: "2h ago", timeLeft: "10h left", emoji: "🌅", text: "Golden hour from the rooftop", likes: 34, comments: 5, bg: "photo-sunset" },
-    { name: "Alex Chen", initials: "AC", time: "5h ago", timeLeft: "7h left", emoji: "🎬", text: "Street performance downtown 🎶", likes: 89, comments: 12, bg: "photo-city" },
-    { name: "Lisa Kim", initials: "LK", time: "8h ago", timeLeft: "4h left", emoji: "⚡", text: "Surprise birthday moment! 🎉", likes: 156, comments: 24, bg: "photo-portrait" },
-    { name: "Nina Patel", initials: "NP", time: "11h ago", timeLeft: "1h left", emoji: "🌌", text: "Northern lights tonight!", likes: 320, comments: 45, bg: "photo-aurora" },
-  ];
-
-  return (
-    <>
-      <div className="phone-header">
-        <h3>Blink</h3>
-        <span style={{ fontSize: "1.2rem", color: "var(--purple-bright)" }}>⚡</span>
-      </div>
-
-      <div className="px-3 pb-2">
-        <div className="glass-card text-center" style={{ padding: "0.5rem 0.75rem", background: "linear-gradient(135deg, rgba(109,40,217,0.15), rgba(139,92,246,0.15))", borderColor: "rgba(167,139,250,0.3)" }}>
-          <span className="text-xs font-bold" style={{ color: "var(--purple-bright)" }}>⚡ Moments last 12 hours · then they dissolve</span>
-        </div>
-      </div>
-
-      <div className="phone-content">
-        {blinks.map((b, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false }}
-            transition={{ delay: i * 0.08 }}
-            className="phone-media-card"
-          >
-            <div className="flex items-center gap-2 p-2.5">
-              <div className="phone-avatar-sm">{b.initials}</div>
-              <div className="flex-1">
-                <div className="text-xs font-bold" style={{ color: "#fff" }}>{b.name}</div>
-                <div className="text-xs" style={{ color: "var(--fg-dim)", fontSize: "0.6rem" }}>{b.time}</div>
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: "linear-gradient(135deg, rgba(109,40,217,0.3), rgba(139,92,246,0.3))", color: "var(--purple-bright)", fontSize: "0.6rem", border: "1px solid rgba(167,139,250,0.3)" }}>
-                ⏳ {b.timeLeft}
-              </span>
-            </div>
-            <div className={`phone-media-img ${b.bg}`} style={{ height: "150px" }}>
-              <span style={{ fontSize: "2rem", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }}>{b.emoji}</span>
-              <div className="absolute inset-0 shimmer" />
-              {/* Dissolve particles */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-40">
-                {[...Array(10)].map((_, j) => (
-                  <motion.div
-                    key={j}
-                    animate={{ y: [0, -25], opacity: [0, 1, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: j * 0.25 }}
-                    className="w-1 h-1 rounded-full bg-white"
-                    style={{ margin: "0 3px" }}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="p-2.5">
-              <div className="text-xs mb-2 font-medium" style={{ color: "#fff" }}>{b.text}</div>
-              <div className="phone-media-actions" style={{ fontSize: "0.7rem" }}>
-                <span style={{ color: "var(--purple-bright)" }}>❤ {b.likes}</span>
-                <span>💬 {b.comments}</span>
-                <span style={{ color: "var(--fg-dim)" }}>⏳ Dissolving</span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <PhoneTabBar active="blink" />
-    </>
-  );
-}
-
 // ===== Maya Screen =====
 export function MayaScreen() {
   return (
@@ -974,7 +753,7 @@ export function MayaScreen() {
             { icon: "📅", text: "Sam is free now — lunch suggestion?", action: "Connect" },
             { icon: "📍", text: "Bistro Garden nearby — 0.4km away", action: "View" },
             { icon: "💬", text: "Mom called 2h ago — call back?", action: "Call" },
-            { icon: "⚡", text: "Lisa posted a Blink — 4h left", action: "Watch" },
+            { icon: "◉", text: "Lisa joined a Ripple — 4h left", action: "View" },
             { icon: "🎵", text: "Dan shared a new audio track", action: "Listen" },
             { icon: "🗺", text: "Nina is traveling — ETA 15 min", action: "Track" },
           ].map((s, i) => (
@@ -997,7 +776,7 @@ export function MayaScreen() {
         {/* Connected systems */}
         <div className="text-xs font-bold mb-2 px-1" style={{ color: "var(--purple-bright)", letterSpacing: "0.1em" }}>CONNECTED SYSTEMS</div>
         <div className="flex flex-wrap gap-1.5 px-1 pb-2">
-          {["Status", "Chats", "Maps", "Feedtab", "Blink"].map((sys) => (
+          {["Status", "Chats", "Maps", "Sync Space", "Pulse"].map((sys) => (
             <span key={sys} className="pill pill-active" style={{ padding: "0.25rem 0.65rem", fontSize: "0.6rem" }}>{sys}</span>
           ))}
         </div>
@@ -1081,14 +860,150 @@ export function PrivacyScreen() {
 const TAB_LIST = [
   { id: "status", icon: "●", label: "Status" },
   { id: "chats", icon: "💬", label: "Chats" },
+  { id: "ripple", icon: "🌐", label: "Network" },
+  { id: "live", icon: "◉", label: "Live" },
+  { id: "syncspace", icon: "◎", label: "Sync Space" },
+  { id: "pulse", icon: "♥", label: "Pulse" },
   { id: "maps", icon: "📍", label: "Maps" },
-  { id: "feedtab", icon: "✨", label: "Feed" },
-  { id: "blink", icon: "⚡", label: "Blink" },
   { id: "maya", icon: "✦", label: "Maya" },
 ];
 
+// ===== Open Network — Ripples =====
+export function RippleScreen() {
+  const ripples = [
+    { title: "Sunset Run", place: "Marine Drive · 0.8 km", people: 24, live: false },
+    { title: "Rooftop Jam", place: "Indiranagar · 1.2 km", people: 12, live: true },
+    { title: "Coffee & Ideas", place: "Koramangala · 2.4 km", people: 8, live: false },
+    { title: "Pickup Football", place: "Turf 24 · 3.1 km", people: 16, live: false },
+    { title: "Night Market", place: "Church Street · 4.0 km", people: 31, live: true },
+  ];
+
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Open Network</h3>
+        <span style={{ fontSize: "1rem", color: "var(--purple-bright)" }}>◎</span>
+      </div>
+      <div className="phone-content">
+        {ripples.map((r) => (
+          <div key={r.title} className="phone-ripple-card">
+            <div className="phone-ripple-media">
+              {r.live && <span className="phone-ripple-live">LIVE</span>}
+            </div>
+            <div className="phone-ripple-body">
+              <div className="phone-ripple-title">{r.title}</div>
+              <div className="phone-ripple-meta">{r.place} · {r.people} going</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <PhoneTabBar active="ripple" />
+    </>
+  );
+}
+
+// ===== Open Network — Live =====
+export function LiveScreen() {
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Live</h3>
+        <span style={{ fontSize: "1rem", color: "#ef4444" }}>●</span>
+      </div>
+      <div className="phone-content" style={{ display: "flex", flexDirection: "column" }}>
+        <div className="phone-live-stage">
+          <div className="phone-live-top">
+            <span className="phone-live-badge">LIVE</span>
+            <span className="phone-live-count">1.2k watching</span>
+          </div>
+          <div className="phone-live-comments">
+            <span className="phone-live-comment">Maya: this view 😍</span>
+            <span className="phone-live-comment">Alex: where is this?</span>
+            <span className="phone-live-comment">Sam: joining now!</span>
+          </div>
+        </div>
+      </div>
+      <PhoneTabBar active="live" />
+    </>
+  );
+}
+
+// ===== Sync Space — private identity and connected apps =====
+export function SyncSpacePhoneScreen() {
+  const apps = [
+    { name: "Cafe Ripple", meta: "Codes & receipts · Active", icon: "☕" },
+    { name: "Bookstore", meta: "Identity only · Active", icon: "▤" },
+    { name: "Wallet", meta: "Access paused", icon: "◇" },
+    { name: "Studio", meta: "Revoked", icon: "⌁" },
+  ];
+
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Sync Space</h3>
+        <span style={{ fontSize: "1rem", color: "var(--purple-bright)" }}>⚙</span>
+      </div>
+      <div className="phone-content">
+        <div className="phone-syncid-card">
+          <div className="phone-syncid-label">YOUR SYNC ID</div>
+          <div className="phone-syncid-value">alex.sync</div>
+          <div className="phone-syncid-meta">Active · you control every connection</div>
+        </div>
+
+        <div className="phone-syncspace-title">CONNECTED APPS</div>
+        {apps.map((app) => (
+          <div key={app.name} className="phone-community-card">
+            <div className="phone-community-icon">{app.icon}</div>
+            <div className="flex-1 min-w-0">
+              <div className="phone-community-name truncate">{app.name}</div>
+              <div className="phone-community-meta">{app.meta}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <PhoneTabBar active="syncspace" />
+    </>
+  );
+}
+
+// ===== Pulse — small moments =====
+export function PulseScreen() {
+  const moments = [
+    { who: "AC", text: "Alex is free for coffee", time: "2m" },
+    { who: "MS", text: "Maya shared a sunset moment", time: "12m" },
+    { who: "SR", text: "Sam finished a run · 5.2 km", time: "28m" },
+    { who: "JP", text: "Jordan is heading home", time: "1h" },
+    { who: "LK", text: "Lisa is looking for plans tonight", time: "2h" },
+  ];
+
+  return (
+    <>
+      <div className="phone-header">
+        <h3>Pulse</h3>
+        <span style={{ fontSize: "1rem", color: "var(--purple-bright)" }}>♥</span>
+      </div>
+      <div className="phone-content">
+        {moments.map((m) => (
+          <div key={m.text} className="phone-pulse-row">
+            <div className="phone-avatar-sm">{m.who}</div>
+            <div className="phone-pulse-text">{m.text}</div>
+            <span className="phone-pulse-time">{m.time}</span>
+          </div>
+        ))}
+      </div>
+      <PhoneTabBar active="pulse" />
+    </>
+  );
+}
+
 const PIXEL_COLS = 16;
 const PIXEL_ROWS = 4;
+
+// Deterministic jitter — Math.random() during render is a purity violation.
+const pixelNoise = (r: number, c: number, salt: number) => {
+  const x = Math.sin(r * 127.1 + c * 311.7 + salt * 74.7) * 43758.5453;
+  return x - Math.floor(x);
+};
 
 function PhoneTabBar({ active }: { active: string }) {
   const activeTab = TAB_LIST.find((t) => t.id === active) || TAB_LIST[0];
@@ -1096,12 +1011,13 @@ function PhoneTabBar({ active }: { active: string }) {
   // Generate pixel grid with random delays — regenerated each tab switch
   const pixels = useMemo(() => {
     const arr: { id: string; delay: number; exitDelay: number }[] = [];
+    const seed = active.split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
     for (let r = 0; r < PIXEL_ROWS; r++) {
       for (let c = 0; c < PIXEL_COLS; c++) {
         arr.push({
           id: `${r}-${c}`,
-          delay: Math.random() * 0.35,
-          exitDelay: Math.random() * 0.3,
+          delay: pixelNoise(r, c, seed) * 0.35,
+          exitDelay: pixelNoise(r, c, seed + 1) * 0.3,
         });
       }
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 /**
  * Interactive 3D Phone — drag to rotate, scroll/pinch to scale.

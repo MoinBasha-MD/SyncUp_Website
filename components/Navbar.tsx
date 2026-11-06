@@ -2,41 +2,48 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useActiveSection } from "@/components/useActiveSection";
+
+// Full DOM order — the hook picks the last section whose top has passed.
+const SECTION_ORDER = [
+  "opening", "hero", "problem", "status", "sync", "connect",
+  "world", "ripples", "live", "syncspace", "pulse", "connections",
+  "chats", "privacy", "maps", "maya",
+  "ecosystem", "social", "final",
+];
 
 const NAV_ITEMS = [
   { label: "Status", id: "status", icon: "●" },
   { label: "Chats", id: "chats", icon: "💬" },
+  { label: "Network", id: "world", icon: "◎" },
+  { label: "Ripples", id: "ripples", icon: "◉" },
+  { label: "Live", id: "live", icon: "●" },
+  { label: "Sync Space", id: "syncspace", icon: "◈" },
+  { label: "Pulse", id: "pulse", icon: "♥" },
   { label: "Maps", id: "maps", icon: "📍" },
-  { label: "Feedtab", id: "feedtab", icon: "✨" },
-  { label: "Blink", id: "blink", icon: "⚡" },
   { label: "Maya", id: "maya", icon: "✦" },
 ];
 
 const PIXEL_COLS = 20;
 const PIXEL_ROWS = 3;
 
+// Deterministic jitter — Math.random() during render is a purity violation.
+const pixelNoise = (r: number, c: number, salt: number) => {
+  const x = Math.sin(r * 127.1 + c * 311.7 + salt * 74.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const activeSection = useActiveSection(SECTION_ORDER);
 
   useEffect(() => {
     const update = () => {
       const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
       setProgress(Math.max(0, Math.min(1, p)));
       setScrolled(window.scrollY > 80);
-
-      const sections = NAV_ITEMS.map((item) => document.getElementById(`section-${item.id}`)).filter(Boolean);
-      const scrollPos = window.scrollY + window.innerHeight / 2;
-      let found = "";
-      for (const sec of sections) {
-        if (sec && sec.offsetTop <= scrollPos && sec.offsetTop + sec.offsetHeight > scrollPos) {
-          found = sec.id.replace("section-", "");
-          break;
-        }
-      }
-      setActiveSection(found);
     };
     window.addEventListener("scroll", update, { passive: true });
     update();
@@ -53,11 +60,12 @@ export function Navbar() {
   // Pixel grid for dissolve effect — regenerated on tab change
   const pixels = useMemo(() => {
     const arr: { id: string; delay: number }[] = [];
+    const seed = activeSection.split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
     for (let r = 0; r < PIXEL_ROWS; r++) {
       for (let c = 0; c < PIXEL_COLS; c++) {
         arr.push({
           id: `${r}-${c}`,
-          delay: Math.random() * 0.35,
+          delay: pixelNoise(r, c, seed) * 0.12,
         });
       }
     }
@@ -93,7 +101,7 @@ export function Navbar() {
 
           {/* Desktop nav — pixel dissolve tab (same as phone) */}
           <div className="hidden md:flex items-center" style={{ position: "relative" }}>
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {activeTab ? (
                 <motion.div
                   key={activeTab.id}
@@ -112,7 +120,7 @@ export function Navbar() {
                         initial={{ opacity: 0, scale: 0, y: -3 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0, y: 5 }}
-                        transition={{ delay: p.delay, duration: 0.25, ease: "easeOut" }}
+                        transition={{ delay: p.delay, duration: 0.18, ease: "easeOut" }}
                       />
                     ))}
                   </div>
@@ -124,27 +132,13 @@ export function Navbar() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ delay: 0.12, duration: 0.3 }}
+                    transition={{ delay: 0.04, duration: 0.2 }}
                   >
                     <span className="nav-pixel-icon">{activeTab.icon}</span>
                     <span className="nav-pixel-label">{activeTab.label}</span>
                   </motion.button>
                 </motion.div>
-              ) : (
-                /* When no feature section is active (opening/hero/presence) — show hint */
-                <motion.div
-                  key="idle"
-                  className="nav-idle-hint"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <span style={{ fontSize: "0.8rem", color: "var(--fg-dim)", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600 }}>
-                    Scroll to explore
-                  </span>
-                </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </div>
 

@@ -23,7 +23,7 @@ export function ParticleBackground() {
     let animationId: number;
     let width = 0;
     let height = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     // Adaptive particle count
     const isMobile = window.innerWidth < 768;
